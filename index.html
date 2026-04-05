@@ -115,12 +115,141 @@
       <p>Официальные СМИ говорят вам, что это просто «удобные магазины у дома». Но мы получили доступ к засекреченным API красно-белых. Они выстроили идеальную геометрическую сеть "магазинчиков" для захвата ФКН.</p>
     </div>
 
-    <!-- ДОКАЗАТЕЛЬСТВО 1: ГРАФИК -->
-    <h2>ДОКАЗАТЕЛЬСТВО #1: КОНСПЕКТЫ ПЕРВОКУРСНИКОВ или ТИХАЯ ПРОПАГАНДА...</h2>
-    <p>Вы только поступили на факультет. Посмотрите на эти вырезки из учебных материалов. Мы обнаружили многократное упоминание КБ в конспектах.</p>
-    <div class="chart-container">
-      <canvas id="truthChart"></canvas>
-    </div>
+    !-- ДОКАЗАТЕЛЬСТВО 1: ГРАФИК -->
+<h2>ДОКАЗАТЕЛЬСТВО #1: КОНСПЕКТЫ ПЕРВОКУРСНИКОВ или ТИХАЯ ПРОПАГАНДА...</h2>
+<p>Вы только поступили на факультет. Посмотрите на эти вырезки из учебных материалов. Мы обнаружили многократное упоминание КБ в конспектах.</p>
+
+<div class="chart-container">
+  <canvas id="truthChart"></canvas>
+</div>
+
+<div class="chart-container">
+  <canvas id="kbGraph"></canvas>
+</div>
+
+<script>
+  /* =========================================
+     ЧАСТЬ 1: ГРАФИКИ (Chart.js)
+     ========================================= */
+  const ctx = document.getElementById('truthChart').getContext('2d');
+  const truthChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['2015', '2017', '2019', '2021', '2023', '2024'],
+      datasets: [{
+        label: 'Кол-во магазинов-ретрансляторов',
+        data: [10, 35, 70, 110, 135, 145],
+        borderColor: '#ff003c',
+        backgroundColor: 'rgba(255, 0, 60, 0.2)',
+        yAxisID: 'y',
+        fill: true
+      },
+      {
+        label: 'Уровень независимого мышления (%)',
+        data: [85, 60, 40, 20, 10, 2],
+        borderColor: '#00ff00',
+        borderDash: [5, 5],
+        yAxisID: 'y1',
+        tension: 0.4
+      }]
+    },
+    options: {
+      responsive: true,
+      interaction: { mode: 'index', intersect: false },
+      scales: {
+        y: { type: 'linear', display: true, position: 'left', grid: { color: '#333' } },
+        y1: { type: 'linear', display: true, position: 'right', grid: { drawOnChartArea: false } }
+      },
+      plugins: {
+        legend: { labels: { color: '#fff' } }
+      }
+    }
+  });
+
+  const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+  const fkn = [851, 1040, 1237, 1473, 1754, 2136, 2751, 3183, 3578, 3934, 5178, 6089];
+  const bk = [23200, 29700, 47600, 73000, 95000, 114000, 122000, 124000, 130000, 135000, 140000, 142000];
+
+  const kbCtx = document.getElementById('kbGraph').getContext('2d');
+  new Chart(kbCtx, {
+    type: 'line',
+    data: {
+      labels: years,
+      datasets: [
+        {
+          label: 'ФКН',
+          data: fkn,
+          borderColor: '#00ff00',
+          backgroundColor: 'rgba(0, 255, 0, 0.12)',
+          tension: 0.35,
+          fill: false,
+          yAxisID: 'y'
+        },
+        {
+          label: 'БК',
+          data: bk,
+          borderColor: '#ff003c',
+          backgroundColor: 'rgba(255, 0, 60, 0.12)',
+          tension: 0.35,
+          fill: false,
+          yAxisID: 'y1'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      plugins: {
+        legend: {
+          labels: {
+            color: '#fff'
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: {
+            color: '#aaa'
+          },
+          grid: {
+            color: '#333'
+          }
+        },
+        y: {
+          position: 'left',
+          ticks: {
+            color: '#00ff00'
+          },
+          grid: {
+            color: '#333'
+          },
+          title: {
+            display: true,
+            text: 'ФКН',
+            color: '#00ff00'
+          }
+        },
+        y1: {
+          position: 'right',
+          ticks: {
+            color: '#ff003c'
+          },
+          grid: {
+            drawOnChartArea: false
+          },
+          title: {
+            display: true,
+            text: 'БК',
+            color: '#ff003c'
+          }
+        }
+      }
+    }
+  });
+</script>
 
     <!-- ДОКАЗАТЕЛЬСТВО 2: ИНТЕГРАЦИЯ ВАШЕЙ КАРТЫ -->
     <h2>ДОКАЗАТЕЛЬСТВО #2: РАДИУС ВЛИЯНИЯ</h2>
