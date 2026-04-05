@@ -31,5 +31,7 @@ Linear(128→2) → Output (2 classes)
 
 **Параметры модели:** ~8.5M обучаемых параметров
 
+## Веса модели
+https://disk.360.yandex.ru/d/xVUDvHt_oHd7Ww
 
 
