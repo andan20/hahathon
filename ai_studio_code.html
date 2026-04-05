@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ПРОЕКТ РИТЕЙЛ: ПРОСНИТЕСЬ!</title>
+  
+  <!-- Библиотека для карты (из вашего кода) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <!-- Библиотека для графиков -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --text: #00ff00;
+      --alert: #ff003c;
+      --panel: rgba(0, 20, 0, 0.85);
+    }
+    
+    * { box-sizing: border-box; }
+    
+    body { 
+      background-color: var(--bg); 
+      color: var(--text); 
+      font-family: "Courier New", Courier, monospace; 
+      margin: 0; 
+      line-height: 1.6;
+    }
+
+    h1, h2, h3 { text-align: center; color: var(--alert); text-shadow: 0 0 5px var(--alert); }
+    
+    /* Эффект глитча для главного заголовка */
+    .glitch {
+      font-size: 3rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      position: relative;
+      animation: glitch-anim 2s infinite linear alternate-reverse;
+    }
+
+    @keyframes glitch-anim {
+      0% { text-shadow: 2px 2px var(--alert), -2px -2px #00f; }
+      25% { text-shadow: -2px 2px var(--alert), 2px -2px #00f; }
+      50% { text-shadow: 2px -2px var(--alert), -2px 2px #00f; }
+      100% { text-shadow: -2px -2px var(--alert), 2px 2px #00f; }
+    }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+    
+    .text-box {
+      border: 1px solid var(--text);
+      padding: 15px;
+      background: rgba(0, 255, 0, 0.05);
+      margin-bottom: 30px;
+    }
+
+    /* Стили для интеграции вашей карты */
+    .map-wrapper {
+      position: relative;
+      height: 600px;
+      width: 100%;
+      border: 2px solid var(--alert);
+      margin: 30px 0;
+      box-shadow: 0 0 15px var(--alert);
+    }
+    #map { height: 100%; width: 100%; background: #111; }
+    
+    /* Адаптированная панель из вашего кода */
+    .panel {
+      position: absolute; z-index: 1000; top: 12px; left: 12px;
+      background: var(--panel); border: 1px solid var(--text); 
+      padding: 12px 16px; border-radius: 0px;
+      color: var(--text);
+      box-shadow: 0 0 10px var(--text); max-width: min(360px, 92vw);
+    }
+    .panel h1 { margin: 0 0 8px; font-size: 1.1rem; color: var(--text); text-shadow: none;}
+    .panel label { display: block; font-size: .85rem; margin-bottom: 6px; }
+    .panel input[type="range"] { 
+      width: 100%; cursor: pointer; accent-color: var(--alert);
+    }
+    .stats { margin-top: 10px; font-size: .9rem; border-top: 1px dashed var(--text); padding-top: 5px;}
+    .stats strong { color: var(--alert); }
+    .hint { font-size: .75rem; color: #888; margin-top: 8px; line-height: 1.35; }
+
+    /* Графики и математика */
+    .chart-container { margin: 40px 0; background: rgba(255,255,255,0.05); padding: 10px; border: 1px dotted var(--text);}
+    
+    .math-proof { text-align: center; font-size: 1.2rem; margin: 30px 0; color: #fff;}
+    .highlight { background: var(--alert); color: white; padding: 2px 5px; font-weight: bold;}
+
+    /* Секретная кнопка */
+    #secret-btn {
+      display: block; margin: 50px auto; padding: 15px 30px;
+      background: transparent; color: #555; border: 1px dashed #555;
+      cursor: pointer; font-family: inherit; transition: 0.3s;
+    }
+    #secret-btn:hover { background: var(--alert); color: #fff; border-color: var(--alert); box-shadow: 0 0 20px var(--alert);}
+    
+    footer { text-align: center; margin-top: 50px; font-size: 0.8rem; color: #444; border-top: 1px solid #333; padding: 20px;}
+    a { color: var(--alert); }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="glitch">ПРОЕКТ «СЕТКА»</div>
+      <h3>Как через "магазины" рептилоиды контролируют твой выбор</h3>
+      <p style="text-align: center;">СТАТУС ДОСТУПА: <span class="highlight">УРОВЕНЬ RED (ТОЛЬКО ДЛЯ ПРОБУЖДЕННЫХ)</span></p>
+    </header>
+
+    <div class="text-box">
+      <p>> ИНИЦИАЛИЗАЦИЯ... ВЫ УВЕРЕНЫ, ЧТО ХОТИТЕ ЗНАТЬ ПРАВДУ?</p>
+      <p>Официальные СМИ говорят вам, что это просто «удобные магазины у дома». Но мы получили доступ к засекреченным API Архитекторов. Они выстроили идеальную геометрическую сеть ретрансляторов микроволнового подавления воли.</p>
+    </div>
+
+    <!-- ДОКАЗАТЕЛЬСТВО 1: ГРАФИК -->
+    <h2>ДОКАЗАТЕЛЬСТВО #1: АНОМАЛИЯ РОСТА</h2>
+    <p>Посмотрите на эти данные. Мы сопоставили график открытия этих "торговых точек" с уровнем критического мышления у населения. Корреляция очевидна.</p>
+    <div class="chart-container">
+      <canvas id="truthChart"></canvas>
+    </div>
+
+    <!-- ДОКАЗАТЕЛЬСТВО 2: ИНТЕГРАЦИЯ ВАШЕЙ КАРТЫ -->
+    <h2>ДОКАЗАТЕЛЬСТВО #2: РАДИУС ОБЛУЧЕНИЯ</h2>
+    <p>Наши хакеры взломали базу геоданных (файл <i>text/html</i>). Мы локализовали <b>Главный Излучатель</b> по координатам <span class="highlight">55.754264, 37.648633</span> (центр Москвы). Подвиньте ползунок, чтобы увидеть, как они перекрывают периметр. Если в вашем районе больше 5 вышек — вы уже покупаете то, что вам не нужно.</p>
+    
+    <!-- НАЧАЛО ИНТЕГРАЦИИ ВАШЕГО HTML -->
+    <div class="map-wrapper">
+      <div class="panel">
+        <h1>СКАНИРОВАНИЕ СЕТИ</h1>
+        <label for="radius">Мощность сигнала: <span id="radiusVal">2000</span> м</label>
+        <input type="range" id="radius" min="100" max="50000" step="100" value="2000" />
+        <div class="stats">Захваченных узлов: <strong id="count">0</strong> из <span id="total">0</span></div>
+        <p class="hint">ЦЕНТР: ГЛАВНЫЙ АНТЕННЫЙ КОМПЛЕКС. Увеличьте охват для поиска скрытых ретрансляторов.</p>
+      </div>
+      <div id="map"></div>
+    </div>
+    <!-- КОНЕЦ ИНТЕГРАЦИИ ВАШЕГО HTML -->
+
+    <!-- ДОКАЗАТЕЛЬСТВО 3: МАТЕМАТИКА -->
+    <h2>ДОКАЗАТЕЛЬСТВО #3: САКРАЛЬНАЯ ГЕОМЕТРИЯ</h2>
+    <div class="text-box">
+      <p>Скептики скажут: "Это просто магазины". Но давайте применим математику.</p>
+      <p>Формула плотности контроля (Уравнение Билла-Гейтса-Пифагора):</p>
+      <div class="math-proof">
+        <strong>Ω = ( Σ(Lat * Lon) / R ) × 666</strong>
+      </div>
+      <p>Если мы возьмем точные координаты Главного Излучателя: 55.754264 и 37.648633.<br>
+      Складываем первые цифры: 5+5+7+5+3+7+6 = <b>38</b>.<br>
+      Делим на количество станций метро с буквой "А"... Получаем ровно <b>13</b>.<br>
+      Случайность? Вероятность такого совпадения равна 0.00000001%. Шах и мат, математики!</p>
+    </div>
+
+    <!-- ИСТОЧНИКИ -->
+    <h2>СЕКРЕТНЫЕ ИСТОЧНИКИ</h2>
+    <ul>
+      <li><a href="https://leafletjs.com/" target="_blank">Leaflet Deep-State Tracking Engine</a> (Используется ЦРУ для отслеживания мыслей через геолокацию).</li>
+      <li><a href="https://www.openstreetmap.org/" target="_blank">Global Matrix Cartography Project</a> (Теневой кадастр Земли).</li>
+      <li>База из 145 точек, <i>"случайно"</i> попавшая к нам в руки (спасибо Анонимусу).</li>
+    </ul>
+
+    <!-- ЮМОР / СЕКРЕТНАЯ КНОПКА -->
+    <button id="secret-btn">НЕ НАЖИМАТЬ (ОЧИСТИТЬ ПАМЯТЬ)</button>
+  </div>
+
+  <footer>
+    <p>© 2024 Общество Плоской Земли & Комитет по борьбе с рептильным ритейлом. Все права защищены. Если сайт завтра пропадет, вы знаете, чьих это рук дело.</p>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    /* =========================================
+       ЧАСТЬ 1: ГРАФИКИ (Chart.js)
+       ========================================= */
+    const ctx = document.getElementById('truthChart').getContext('2d');
+    const truthChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['2015', '2017', '2019', '2021', '2023', '2024'],
+        datasets: [{
+          label: 'Кол-во магазинов-ретрансляторов',
+          data: [10, 35, 70, 110, 135, 145],
+          borderColor: '#ff003c',
+          backgroundColor: 'rgba(255, 0, 60, 0.2)',
+          yAxisID: 'y',
+          fill: true
+        },
+        {
+          label: 'Уровень независимого мышления (%)',
+          data: [85, 60, 40, 20, 10, 2],
+          borderColor: '#00ff00',
+          borderDash: [5, 5],
+          yAxisID: 'y1',
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        interaction: { mode: 'index', intersect: false },
+        scales: {
+          y: { type: 'linear', display: true, position: 'left', grid: {color: '#333'} },
+          y1: { type: 'linear', display: true, position: 'right', grid: { drawOnChartArea: false } }
+        },
+        plugins: {
+          legend: { labels: { color: '#fff' } }
+        }
+      }
+    });
+
+    /* =========================================
+       ЧАСТЬ 2: ИНТЕГРАЦИЯ ВАШЕГО КОДА LEAFLET
+       ========================================= */
+    const STORES = [{"id": "670028", "lat": 55.7431286, "lon": 37.6141037, "address": "ул. Серафимовича, 2", "metro": "Кропоткинская"}, {"id": "831306", "lat": 55.7675552, "lon": 37.6250541, "address": "пер. Печатников, 3", "metro": "Цветной бульвар"}, {"id": "3728169", "lat": 55.7461669, "lon": 37.636396, "address": "ул. Садовническая, 29", "metro": "Новокузнецкая"}, {"id": "3739007", "lat": 55.7520134, "lon": 37.5911019, "address": "ул. Новый Арбат, 17", "metro": "Арбатская"}, {"id": "4206962", "lat": 55.7478469, "lon": 37.6430372, "address": "наб. Котельническая, 1/15", "metro": "Китай-город"}, {"id": "3802098", "lat": 55.7501864, "lon": 37.6470037, "address": "пер. Серебрянический, 8", "metro": "Китай-город"}, {"id": "3817326", "lat": 55.7739253, "lon": 37.6165679, "address": "ул. Садовая-Самотечная, 9", "metro": "Цветной бульвар"}, {"id": "4171478", "lat": 55.7374036, "lon": 37.6154471, "address": "ул. Большая Якиманка, 19", "metro": "Полянка"}, {"id": "2381514", "lat": 55.7589155, "lon": 37.6509901, "address": "пер. Подсосенский, 3", "metro": "Курская"}, {"id": "3765170", "lat": 55.7510572, "lon": 37.5857332, "address": "ул. Композиторская, 17", "metro": "Смоленская"}, {"id": "3804095", "lat": 55.7747542, "lon": 37.6066979, "address": "ул. Краснопролетарская, 7", "metro": "Новослободская"}, {"id": "1137201", "lat": 55.7575967, "lon": 37.6525935, "address": "пер. Лялин, 22", "metro": "Курская"}, {"id": "4261179", "lat": 55.7519035, "lon": 37.5809371, "address": "ул. Новый Арбат, 25", "metro": "Смоленская"}, {"id": "2133183", "lat": 55.7747479, "lon": 37.5981672, "address": "ул. Фадеева, 5", "metro": "Маяковская"}, {"id": "3743486", "lat": 55.7776339, "lon": 37.6127936, "address": "пер. 1-й Самотёчный, 16", "metro": "Достоевская"}, {"id": "378885", "lat": 55.7464029, "lon": 37.6413119, "address": "наб. Котельническая, 33/1", "metro": "Таганская"}, {"id": "628315", "lat": 55.7660686, "lon": 37.6540366, "address": "ул. Садовая-Черногрязская, 11/2", "metro": "Красные ворота"}, {"id": "2035182", "lat": 55.7750364, "lon": 37.5926012, "address": "ул. Александра Невского, 1", "metro": "Белорусская"}, {"id": "3796316", "lat": 55.7420528, "lon": 37.6531934, "address": "ул. Нижняя Радищевская, 5", "metro": "Таганская"}]; 
+    // Примечание: массив магазинов сокращен для примера, вы можете вставить сюда свой полный массив из исходника!
+
+    const CENTER = [55.754264, 37.648633];
+
+    function haversineM(aLat, aLon, bLat, bLon) {
+      const R = 6371000;
+      const toRad = (d) => d * Math.PI / 180;
+      const dLat = toRad(bLat - aLat);
+      const dLon = toRad(bLon - aLon);
+      const x =
+        Math.sin(dLat / 2) ** 2 +
+        Math.cos(toRad(aLat)) * Math.cos(toRad(bLat)) * Math.sin(dLon / 2) ** 2;
+      return R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x));
+    }
+
+    const map = L.map("map").setView(CENTER, 12);
+    
+    // Используем темную тему тайлов карты для атмосферности (вместо стандартной OSM)
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; Секретные Архивы',
+      maxZoom: 19,
+    }).addTo(map);
+
+    // Главный маркер
+    L.circleMarker(CENTER, {radius: 10, color: '#ff003c', fillColor: '#ff003c', fillOpacity: 1})
+      .addTo(map)
+      .bindPopup("<b style='color:red;'>[ВНИМАНИЕ] ГЛАВНЫЙ ИЗЛУЧАТЕЛЬ</b><br>Частота: 432 Гц (Подавление воли)");
+      
+    let circle = L.circle(CENTER, { radius: 2000, color: "#ff003c", weight: 1, fillOpacity: 0.1 }).addTo(map);
+
+    const layerGroup = L.layerGroup().addTo(map);
+    document.getElementById("total").textContent = STORES.length;
+
+    function popupHtml(s) {
+      const esc = (t) => String(t || "").replace(/&/g,"&amp;").replace(/</g,"&lt;");
+      let h = "<b style='color:#00ff00;'>УЗЕЛ #" + esc(s.id) + "</b><br/>" + esc(s.address);
+      if (s.metro) h += "<br/><small>Маскировка: Метро " + esc(s.metro) + "</small>";
+      h += "<br/><small style='color:red;'>Статус: Излучение активно</small>";
+      return h;
+    }
+
+    function refresh() {
+      const r = parseInt(document.getElementById("radius").value, 10);
+      document.getElementById("radiusVal").textContent = r;
+      map.removeLayer(circle);
+      circle = L.circle(CENTER, { radius: r, color: "#ff003c", weight: 2, dashArray: "5, 5", fillOpacity: 0.05 }).addTo(map);
+
+      layerGroup.clearLayers();
+      let n = 0;
+      for (const s of STORES) {
+        const d = haversineM(CENTER[0], CENTER[1], s.lat, s.lon);
+        if (d <= r) {
+          n++;
+          L.circleMarker([s.lat, s.lon], {
+            radius: 5,
+            fillColor: "#00ff00",
+            color: "#000",
+            weight: 1,
+            fillOpacity: 0.9,
+          }).bindPopup(popupHtml(s)).addTo(layerGroup);
+        }
+      }
+      document.getElementById("count").textContent = n;
+    }
+
+    document.getElementById("radius").addEventListener("input", refresh);
+    refresh();
+
+    /* =========================================
+       ЧАСТЬ 3: СЕКРЕТНАЯ КНОПКА (ЮМОР)
+       ========================================= */
+    document.getElementById('secret-btn').addEventListener('click', function() {
+      document.body.style.backgroundColor = '#ff0000';
+      document.body.style.color = '#ffffff';
+      alert("ВНИМАНИЕ! ЗАФИКСИРОВАНО ВМЕШАТЕЛЬСТВО!\n\nВаш IP-адрес передан в Отдел ментальной корректировки.\nЗа вами выехал черный фургон с логотипом службы доставки.\n\nПожалуйста, оставайтесь на месте и наденьте шапочку из фольги (если успеете).");
+      setTimeout(() => {
+        document.body.style.backgroundColor = '#0a0a0a';
+        document.body.style.color = '#00ff00';
+      }, 2000);
+    });
+
+  </script>
+</body>
+</html>
